@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Socket.io -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <title>LANScreenShare : Role - Viewer</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>LANScreenShare Viewer</h1>
+    <h3 id="group"></h3><button id="change_group">Change Group</button>
+    <img id="screen" src="" alt="Screen" style="width:100%; height:100%;">
+
+    <script>
+        const group = prompt("Enter group join code: ");
+        const socket = io();
+
+        document.getElementById("group").innerHTML = "Subscribed to Group: " + group;
+        socket.emit('subscribe', group);
+
+        socket.on('disconnect', function(){
+            alert('Disconnected from server');
+        });
+
+        socket.on('share', function(data){
+            document.getElementById("screen").src = "data:image/jpg;base64," + data;
+        });
+
+        document.getElementById("change_group").addEventListener("click", function(){
+            const group = prompt("Enter group join code: ");
+            document.getElementById("group").innerHTML = "Subscribed to Group: " + group;
+            socket.emit('subscribe', group);
+        });
+    </script>
+</body>
+</html>
