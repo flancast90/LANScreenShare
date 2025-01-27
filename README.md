@@ -48,8 +48,7 @@ cd LANScreenShare</code>
 <code>PORT=8000
 MONGODB_URI=mongodb://localhost:27017/lanscreenshare
 SESSION_SECRET=your_session_secret_here
-NODE_ENV=development
-</code>
+NODE_ENV=development</code>
 
 # Optional: Stripe configuration for premium features
 <code>STRIPE_SECRET_KEY=your_stripe_secret_key
