@@ -2,7 +2,7 @@ const screenshot = require("screenshot-desktop");
 const robot = require("robotjs");
 const io = require("socket.io-client");
 
-const dev = true;
+const dev = false;
 const endpoint = dev
   ? "http://localhost:8000"
   : "https://lan-screen-share-flancast90.replit.app/";
