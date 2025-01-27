@@ -183,8 +183,6 @@ function startScreensharing() {
           }
         }
       );
-
-      console.log(`${FgGreen}Screenshot sent to group: ${group}${Reset}`);
     } catch (err) {
       console.log(`${FgRed}Error capturing screenshot: ${err}${Reset}`);
     }
