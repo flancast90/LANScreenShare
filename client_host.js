@@ -2,7 +2,7 @@ const screenshot = require("screenshot-desktop");
 const robot = require("robotjs");
 const io = require("socket.io-client");
 
-const dev = false;
+const dev = true;
 const endpoint = dev
   ? "http://localhost:8000"
   : "https://lan-screen-share-flancast90.replit.app/";
@@ -23,6 +23,9 @@ const config = {
 
 const group = Math.floor(100000 + Math.random() * 900000).toString();
 let screenshotInterval = null;
+
+let isPremium = false;
+let robotEnabled = false;
 
 // Terminal colors for pretty output
 const Reset = "\x1b[0m";
@@ -52,8 +55,24 @@ By: @flancast90
 // Socket connection handling
 socket.on("connect", () => {
   console.log(`${FgGreen}Connected to remote control server${Reset}`);
-  socket.emit("subscribe", group);
-  startScreensharing();
+  console.log(`${FgGreen}Socket ID: ${socket.id}${Reset}`);
+  console.log(
+    `${FgGreen}Transport: ${socket.io.engine.transport.name}${Reset}`
+  );
+
+  socket.emit("subscribe", group, (error) => {
+    if (error) {
+      console.log(`${FgRed}Error subscribing to group: ${error}${Reset}`);
+    } else {
+      console.log(
+        `${FgGreen}Successfully subscribed to group: ${group}${Reset}`
+      );
+      startScreensharing();
+    }
+  });
+
+  // Notify clients when host connects
+  socket.emit("host_connected", group);
 });
 
 socket.on("disconnect", (reason) => {
@@ -65,6 +84,9 @@ socket.on("disconnect", (reason) => {
     screenshotInterval = null;
     console.log(`${FgYellow}Screenshot sharing stopped${Reset}`);
   }
+
+  // Add disconnect handler to notify clients
+  socket.emit("host_disconnected", group);
 });
 
 socket.on("connect_error", (error) => {
@@ -77,14 +99,34 @@ socket.on("error", (error) => {
   console.log(`${FgRed}Stack trace: ${error.stack}${Reset}`);
 });
 
-// Mouse control handlers
+// Add premium status handler
+socket.on("premium_status", (status) => {
+  isPremium = status;
+  if (!isPremium) {
+    console.log(
+      `${FgYellow}Running in free mode - limited to 30 minutes${Reset}`
+    );
+    setTimeout(() => {
+      console.log(`${FgRed}Free trial expired${Reset}`);
+      process.exit();
+    }, 30 * 60 * 1000);
+  }
+});
+
+// Update mouse control handlers
+socket.on("robot_status", (data) => {
+  robotEnabled = data.enabled;
+  console.log(
+    `${FgGreen}Robot mode ${robotEnabled ? "enabled" : "disabled"}${Reset}`
+  );
+});
+
+// Modify existing mouse handlers to check robotEnabled
 socket.on("mouse_move", (data) => {
+  if (!robotEnabled) return;
   try {
-    // Convert relative coordinates to absolute screen coordinates
     const x = Math.floor(data.x * screenSize.width);
     const y = Math.floor(data.y * screenSize.height);
-
-    // Move the mouse
     robot.moveMouse(x, y);
   } catch (error) {
     console.log(`${FgRed}Error moving mouse: ${error}${Reset}`);
@@ -92,12 +134,10 @@ socket.on("mouse_move", (data) => {
 });
 
 socket.on("mouse_click", (data) => {
+  if (!robotEnabled) return;
   try {
-    // Convert relative coordinates to absolute screen coordinates
     const x = Math.floor(data.x * screenSize.width);
     const y = Math.floor(data.y * screenSize.height);
-
-    // Move mouse and perform click
     robot.moveMouse(x, y);
     robot.mouseClick();
   } catch (error) {
@@ -123,13 +163,30 @@ function startScreensharing() {
     }
 
     try {
-      const img = await screenshot({ format: "jpeg", quality: 50 });
+      console.log(`${FgGreen}Capturing screenshot...${Reset}`);
+      const img = await screenshot({ format: "jpeg", quality: 30 });
       const base64Image = img.toString("base64");
 
-      socket.emit("screenshot", {
-        group: group,
-        image: base64Image,
-      });
+      // Add size logging
+      const dataSizeKB = Math.round(base64Image.length / 1024);
+      console.log(`${FgGreen}Screenshot size: ${dataSizeKB}KB${Reset}`);
+
+      socket.emit(
+        "share",
+        {
+          group: group,
+          image: base64Image,
+        },
+        (error) => {
+          if (error) {
+            console.log(`${FgRed}Error sending screenshot: ${error}${Reset}`);
+          } else {
+            console.log(`${FgGreen}Screenshot acknowledged by server${Reset}`);
+          }
+        }
+      );
+
+      console.log(`${FgGreen}Screenshot sent to group: ${group}${Reset}`);
     } catch (err) {
       console.log(`${FgRed}Error capturing screenshot: ${err}${Reset}`);
     }
@@ -159,4 +216,14 @@ process.on("unhandledRejection", (reason, promise) => {
   console.log(
     `${FgRed}Unhandled Rejection at: ${promise}, reason: ${reason}${Reset}`
   );
+});
+
+// Update socket event handlers
+socket.on("robot_control", (data) => {
+  if (data.group === group) {
+    robotEnabled = data.enabled;
+    console.log(
+      `${FgGreen}Robot control ${robotEnabled ? "enabled" : "disabled"}${Reset}`
+    );
+  }
 });

@@ -10,25 +10,211 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
+    <style>
+      .code-input {
+        width: 40px;
+        text-align: center;
+        margin: 0 2px;
+      }
+      .error {
+        color: red;
+      }
+      #screen {
+        max-width: 100%;
+        border: 1px solid #ccc;
+      }
+    </style>
   </head>
   <body class="bg-gray-900 min-h-screen">
-    <!-- Status Bar -->
+    <!-- Group Code Modal -->
     <div
-      id="status-bar"
-      class="fixed top-0 left-0 right-0 p-3 text-white text-center transform -translate-y-full transition-transform duration-300"
+      id="modal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
-      Connection Status
+      <div class="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
+        <h2 class="text-2xl font-bold text-gray-100 mb-4">Enter Group Code</h2>
+        <div class="flex gap-2 mb-4">
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input w-12 h-12 text-center text-2xl font-bold bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-indigo-500 focus:outline-none"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input w-12 h-12 text-center text-2xl font-bold bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-indigo-500 focus:outline-none"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input w-12 h-12 text-center text-2xl font-bold bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-indigo-500 focus:outline-none"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input w-12 h-12 text-center text-2xl font-bold bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-indigo-500 focus:outline-none"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input w-12 h-12 text-center text-2xl font-bold bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-indigo-500 focus:outline-none"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input w-12 h-12 text-center text-2xl font-bold bg-gray-700 text-white rounded-lg border-2 border-gray-600 focus:border-indigo-500 focus:outline-none"
+          />
+        </div>
+        <div id="code-error" class="text-red-500 mb-4 hidden">
+          Please enter a valid 6-digit code
+        </div>
+        <button
+          id="join-btn"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg mb-4"
+        >
+          Join Group
+        </button>
+
+        <!-- Add this new section -->
+        <div id="last-connection" class="hidden">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-600"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-gray-800 text-gray-400">OR</span>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button
+              id="rejoin-last-btn"
+              class="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-lg flex items-center justify-center"
+            >
+              <i class="fas fa-history mr-2"></i>
+              <span>Rejoin Last Group: <span id="last-group-code"></span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium Timer Banner -->
+    <div
+      id="timer-banner"
+      class="hidden fixed top-0 left-0 right-0 bg-yellow-600 text-white p-2 text-center"
+    >
+      Free trial: <span id="timer">30:00</span> remaining
+      <button
+        id="upgrade-btn"
+        class="ml-4 bg-yellow-500 hover:bg-yellow-400 px-4 py-1 rounded-lg"
+      >
+        Upgrade to Premium
+      </button>
+    </div>
+
+    <!-- After the premium timer banner, add this modal -->
+    <div
+      id="upgrade-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
+        <h2 class="text-2xl font-bold text-gray-100 mb-4">
+          Upgrade to Premium
+        </h2>
+        <p class="text-gray-300 mb-4">
+          Get unlimited access and remote control features for just $5/month.
+        </p>
+
+        <!-- Stripe Elements container -->
+        <div class="mb-4">
+          <div id="card-element" class="bg-gray-700 p-4 rounded-lg"></div>
+          <div id="card-errors" class="text-red-500 mt-2"></div>
+        </div>
+
+        <button
+          id="submit-payment"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg"
+        >
+          Subscribe Now
+        </button>
+
+        <button
+          onclick="document.getElementById('upgrade-modal').classList.add('hidden')"
+          class="w-full mt-2 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-lg"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
 
     <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8 hidden" id="main-content">
       <!-- Header Section -->
       <div class="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
         <div class="flex items-center justify-between mb-4">
           <h1 class="text-3xl font-bold text-gray-100">
             LANScreenShare Viewer
           </h1>
-          <div class="flex space-x-4">
+          <div class="flex items-center space-x-4">
+            <!-- Premium Features -->
+            <div id="premium-controls" class="hidden">
+              <div class="flex items-center mr-4">
+                <label class="flex items-center cursor-pointer group relative">
+                  <div class="relative">
+                    <input
+                      type="checkbox"
+                      id="premium-robot-toggle"
+                      class="sr-only"
+                    />
+                    <div
+                      class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"
+                    ></div>
+                    <div
+                      class="dot absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition"
+                    ></div>
+                  </div>
+                  <div class="ml-3 text-gray-300 flex items-center">
+                    Robot Mode
+                    <span class="ml-1 cursor-help">
+                      <i class="fas fa-question-circle"></i>
+                    </span>
+                  </div>
+                  <div
+                    class="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap"
+                  >
+                    Remote mouse control allows you to control the mouse of the
+                    host
+                  </div>
+                </label>
+              </div>
+            </div>
+            <!-- Robot Toggle (shown to all users) -->
+            <div id="robot-toggle-container" class="flex items-center mr-4">
+              <label class="flex items-center cursor-pointer group relative">
+                <div class="relative">
+                  <input type="checkbox" id="robot-toggle" class="sr-only" />
+                  <div
+                    class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"
+                  ></div>
+                  <div
+                    class="dot absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition"
+                  ></div>
+                </div>
+                <div class="ml-3 text-gray-300 flex items-center">
+                  Robot Mode
+                  <span class="ml-1 cursor-help">
+                    <i class="fas fa-question-circle"></i>
+                  </span>
+                </div>
+                <!-- Tooltip for non-premium users -->
+                <div
+                  class="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap"
+                >
+                  Upgrade to premium to enable remote mouse control
+                </div>
+              </label>
+            </div>
             <button
               id="fullscreen-btn"
               class="bg-indigo-700 hover:bg-indigo-800 text-white px-4 py-2 rounded-lg flex items-center"
@@ -37,7 +223,7 @@
               Fullscreen
             </button>
             <button
-              id="change_group"
+              id="change-group"
               class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg flex items-center"
             >
               <i class="fas fa-users mr-2"></i>
@@ -45,11 +231,19 @@
             </button>
           </div>
         </div>
-        <h3 id="group" class="text-xl text-gray-300 font-semibold"></h3>
+        <div id="connection-status" class="text-xl text-gray-300 font-semibold">
+          Connection Status: Disconnected
+        </div>
+        <div
+          id="group-display"
+          class="text-xl text-gray-300 font-semibold"
+        ></div>
         <div
           id="peer-status"
           class="mt-4 p-3 rounded-lg bg-gray-700 text-gray-300 transition-colors duration-300"
-        ></div>
+        >
+          Waiting for host...
+        </div>
       </div>
 
       <!-- Screen Share Section -->
@@ -65,6 +259,9 @@
       </div>
     </div>
 
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/client.js"></script>
   </body>
 </html>
