@@ -1,0 +1,9 @@
+modules = ["nodejs-23", "python-base-3.13"]
+run = "node server.js"
+[deployment]
+run = ["sh", "-c", "node server.js"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 8000
+externalPort = 80
