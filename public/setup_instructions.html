@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LANScreenShare : Setup Instructions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      .accordion-content.active {
+        max-height: 500px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 min-h-screen p-4 md:p-8">
+    <div class="container mx-auto max-w-3xl">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-100 mb-4">
+          Setup Instructions
+        </h1>
+        <p class="text-gray-400">
+          Follow these steps to start hosting your screen
+        </p>
+      </div>
+
+      <!-- Quick Start -->
+      <div class="bg-gray-800 rounded-xl p-6 mb-6">
+        <h2 class="text-xl font-bold text-gray-100 mb-4">🚀 Quick Start</h2>
+        <p class="text-gray-300 mb-4">
+          Already have everything installed? Just run:
+        </p>
+        <pre class="bg-gray-900 p-3 rounded-lg text-sm text-gray-300">
+node client_host.js</pre
+        >
+      </div>
+
+      <!-- Prerequisites Alert -->
+      <div
+        class="bg-yellow-900/50 border border-yellow-700 rounded-xl p-6 mb-6"
+      >
+        <div class="flex items-center space-x-3 mb-4">
+          <span class="text-yellow-500 text-xl"
+            ><i class="fas fa-exclamation-triangle"></i
+          ></span>
+          <h2 class="text-xl font-bold text-yellow-500">
+            Important Prerequisites
+          </h2>
+        </div>
+        <p class="text-yellow-200 mb-4">
+          Different operating systems require different setup steps. Please
+          follow the instructions for your system carefully.
+        </p>
+      </div>
+
+      <!-- Instructions Accordion -->
+      <div class="space-y-4">
+        <!-- Step 1: System-Specific Prerequisites -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden">
+          <button
+            class="accordion-header w-full p-6 text-left focus:outline-none"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <span class="text-indigo-500 text-xl"
+                  ><i class="fas fa-cogs"></i
+                ></span>
+                <h2 class="text-xl font-bold text-gray-100">
+                  1. System Prerequisites
+                </h2>
+              </div>
+              <span
+                class="text-gray-400 transform transition-transform duration-200"
+              >
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </button>
+          <div class="accordion-content bg-gray-750 border-t border-gray-700">
+            <div class="p-6 text-gray-300">
+              <!-- Windows -->
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-100 mb-3">
+                  <i class="fab fa-windows mr-2"></i>Windows
+                </h3>
+                <ol class="list-decimal list-inside space-y-3">
+                  <li>
+                    Open PowerShell as Administrator (right-click, "Run as
+                    administrator")
+                  </li>
+                  <li>
+                    Run the following command:
+                    <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+npm install --global --production windows-build-tools</pre
+                    >
+                  </li>
+                </ol>
+              </div>
+
+              <!-- Mac -->
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-100 mb-3">
+                  <i class="fab fa-apple mr-2"></i>Mac
+                </h3>
+                <ol class="list-decimal list-inside space-y-3">
+                  <li>Open Terminal</li>
+                  <li>
+                    Install Xcode Command Line Tools:
+                    <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+xcode-select --install</pre
+                    >
+                  </li>
+                </ol>
+              </div>
+
+              <!-- Linux -->
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-100 mb-3">
+                  <i class="fab fa-linux mr-2"></i>Linux
+                </h3>
+                <ol class="list-decimal list-inside space-y-3">
+                  <li>
+                    Install Python 2.7 and other dependencies:
+                    <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+sudo apt-get update
+sudo apt-get install python2.7 make gcc g++ libxtst-dev libpng++-dev</pre
+                    >
+                  </li>
+                  <li>
+                    Install node-gyp:
+                    <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+npm install -g node-gyp</pre
+                    >
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Install Node.js -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden">
+          <button
+            class="accordion-header w-full p-6 text-left focus:outline-none"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <span class="text-indigo-500 text-xl"
+                  ><i class="fab fa-node-js"></i
+                ></span>
+                <h2 class="text-xl font-bold text-gray-100">
+                  2. Install Node.js
+                </h2>
+              </div>
+              <span
+                class="text-gray-400 transform transition-transform duration-200"
+              >
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </button>
+          <div class="accordion-content bg-gray-750 border-t border-gray-700">
+            <div class="p-6 text-gray-300">
+              <ol class="list-decimal list-inside space-y-4">
+                <li>
+                  Visit
+                  <a
+                    href="https://nodejs.org"
+                    target="_blank"
+                    class="text-indigo-400 hover:text-indigo-300"
+                    >nodejs.org</a
+                  >
+                </li>
+                <li>Download the "LTS" (Long Term Support) version</li>
+                <li>
+                  Run the installer and follow the default installation steps
+                </li>
+                <li>
+                  Verify installation by opening Command Prompt/Terminal and
+                  typing:
+                  <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+node --version</pre
+                  >
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Download & Install LANScreenShare -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden">
+          <button
+            class="accordion-header w-full p-6 text-left focus:outline-none"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <span class="text-indigo-500 text-xl"
+                  ><i class="fas fa-download"></i
+                ></span>
+                <h2 class="text-xl font-bold text-gray-100">
+                  3. Download & Install
+                </h2>
+              </div>
+              <span
+                class="text-gray-400 transform transition-transform duration-200"
+              >
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </button>
+          <div class="accordion-content bg-gray-750 border-t border-gray-700">
+            <div class="p-6 text-gray-300">
+              <ol class="list-decimal list-inside space-y-4">
+                <li>
+                  Download the latest release from our
+                  <a
+                    href="https://github.com/flancast90/LANScreenShare/releases"
+                    target="_blank"
+                    class="text-indigo-400 hover:text-indigo-300"
+                    >GitHub releases page</a
+                  >
+                </li>
+                <li>Extract the ZIP file to a folder</li>
+                <li>
+                  Open Command Prompt/Terminal and navigate to the folder:
+                  <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+cd path/to/LANScreenShare</pre
+                  >
+                </li>
+                <li>
+                  Install required packages:
+                  <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+npm install screenshot-desktop robotjs socket.io-client</pre
+                  >
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Start Sharing -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden">
+          <button
+            class="accordion-header w-full p-6 text-left focus:outline-none"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <span class="text-indigo-500 text-xl"
+                  ><i class="fas fa-play"></i
+                ></span>
+                <h2 class="text-xl font-bold text-gray-100">
+                  4. Start Sharing
+                </h2>
+              </div>
+              <span
+                class="text-gray-400 transform transition-transform duration-200"
+              >
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </button>
+          <div class="accordion-content bg-gray-750 border-t border-gray-700">
+            <div class="p-6 text-gray-300">
+              <ol class="list-decimal list-inside space-y-4">
+                <li>
+                  In the same Command Prompt/Terminal window, run:
+                  <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+node client_host.js</pre
+                  >
+                </li>
+                <li>You'll see a group code displayed in purple text</li>
+                <li>
+                  Share this code with viewers who want to see your screen
+                </li>
+                <li>
+                  Viewers can join by visiting the main website and entering
+                  your code
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Troubleshooting -->
+      <div class="mt-8 bg-gray-800 rounded-xl overflow-hidden">
+        <button
+          class="accordion-header w-full p-6 text-left focus:outline-none"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <span class="text-indigo-500 text-xl"
+                ><i class="fas fa-wrench"></i
+              ></span>
+              <h2 class="text-xl font-bold text-gray-100">Troubleshooting</h2>
+            </div>
+            <span
+              class="text-gray-400 transform transition-transform duration-200"
+            >
+              <i class="fas fa-chevron-down"></i>
+            </span>
+          </div>
+        </button>
+        <div class="accordion-content bg-gray-750 border-t border-gray-700">
+          <div class="p-6 text-gray-300">
+            <ul class="space-y-4">
+              <li>
+                <strong>Build Errors:</strong> If you encounter build errors,
+                ensure you've installed all system prerequisites for your OS
+              </li>
+              <li>
+                <strong>Python Errors:</strong> Make sure you're using Python
+                2.7, not Python 3
+              </li>
+              <li>
+                <strong>Permission Errors:</strong> Try running the commands
+                with administrator/sudo privileges
+              </li>
+              <li>
+                <strong>Need Help?</strong> Visit our
+                <a
+                  href="https://github.com/flancast90/LANScreenShare/issues"
+                  target="_blank"
+                  class="text-indigo-400 hover:text-indigo-300"
+                  >GitHub Issues</a
+                >
+                page
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <div class="mt-8 text-center">
+        <a
+          href="/role"
+          class="inline-flex items-center text-indigo-400 hover:text-indigo-300"
+        >
+          <i class="fas fa-arrow-left mr-2"></i> Back to Role Selection
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Accordion functionality
+      document.querySelectorAll(".accordion-header").forEach((button) => {
+        button.addEventListener("click", () => {
+          const content = button.nextElementSibling;
+          const icon = button.querySelector(".fa-chevron-down");
+
+          content.classList.toggle("active");
+          icon.style.transform = content.classList.contains("active")
+            ? "rotate(180deg)"
+            : "rotate(0)";
+        });
+      });
+
+      // Open first accordion by default
+      document.querySelector(".accordion-header").click();
+    </script>
+  </body>
+</html>

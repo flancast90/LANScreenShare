@@ -374,12 +374,45 @@ io.on("connection", (socket) => {
   });
 
   // Handle mouse clicks
-  socket.on("mouse_click", (data) => {
-    // Forward mouse clicks to the host in the same group
-    socket.to(data.group).emit("mouse_click", {
-      x: data.x,
-      y: data.y,
-    });
+  socket.on("mouse_click", async (data) => {
+    try {
+      const userId = socket.request.session?.passport?.user;
+      if (userId) {
+        const user = await User.findById(userId);
+        if (user?.isPremium) {
+          // Forward mouse clicks to the host in the same group
+          socket.to(data.group).emit("mouse_click", {
+            x: data.x,
+            y: data.y,
+            button: data.button || "left", // Default to left click if not specified
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error handling mouse click:", error);
+    }
+  });
+
+  // Add new handler for keyboard events
+  socket.on("key_press", async (data) => {
+    try {
+      const userId = socket.request.session?.passport?.user;
+      if (userId) {
+        const user = await User.findById(userId);
+        if (user?.isPremium) {
+          // Forward keyboard events to the host in the same group
+          socket.to(data.group).emit("key_press", {
+            key: data.key,
+            shift: data.shift,
+            ctrl: data.ctrl,
+            alt: data.alt,
+            meta: data.meta,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error handling key press:", error);
+    }
   });
 
   socket.on("disconnect", () => {
@@ -455,9 +488,14 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Protected route example
+// Protected route
+app.get("/role", ensureAuthenticated, (req, res) => {
+  res.sendFile(__dirname + "/public/role.html");
+});
+
+// Protected route
 app.get("/view", ensureAuthenticated, (req, res) => {
-  res.sendFile(__dirname + "/public/client_view.html");
+  res.sendFile(__dirname + "/public/view.html");
 });
 
 // index page

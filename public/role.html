@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LANScreenShare : Choose Role</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-900 min-h-screen flex items-center justify-center p-4">
+    <div class="container max-w-4xl">
+      <!-- Header -->
+      <h1 class="text-4xl font-bold text-center text-gray-100 mb-8">
+        Choose Your Role
+      </h1>
+
+      <!-- Bento Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Viewer Box -->
+        <a
+          href="/view"
+          class="flex items-center justify-center group bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
+        >
+          <div class="flex flex-col items-center text-center space-y-4">
+            <div class="text-indigo-500 text-5xl">
+              <i class="fas fa-tv"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-100">View Screen</h2>
+            <p class="text-gray-400">
+              Join a screen sharing session as a viewer
+            </p>
+            <span
+              class="inline-flex items-center text-indigo-400 group-hover:text-indigo-300"
+            >
+              Get Started <i class="fas fa-arrow-right ml-2"></i>
+            </span>
+          </div>
+        </a>
+
+        <!-- Host Options Column -->
+        <div class="space-y-6">
+          <!-- Setup Instructions Box -->
+          <a
+            href="/setup_instructions.html"
+            class="block bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="flex flex-col items-center text-center space-y-4">
+              <div class="text-green-500 text-4xl">
+                <i class="fas fa-book-open"></i>
+              </div>
+              <h2 class="text-xl font-bold text-gray-100">
+                Setup Instructions
+              </h2>
+              <p class="text-gray-400">
+                Learn how to set up and host a screen sharing session
+              </p>
+            </div>
+          </a>
+
+          <!-- Self Host Box -->
+          <a
+            href="https://github.com/flancast90/LANScreenShare"
+            target="_blank"
+            class="block bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
+          >
+            <div class="flex flex-col items-center text-center space-y-4">
+              <div class="text-yellow-500 text-4xl">
+                <i class="fab fa-github"></i>
+              </div>
+              <h2 class="text-xl font-bold text-gray-100">Self Host</h2>
+              <p class="text-gray-400">Advanced: Deploy your own instance</p>
+              <div
+                class="bg-gray-900 text-xs text-gray-400 px-3 py-1 rounded-full"
+              >
+                Advanced Users Only
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -290,7 +290,39 @@ elements.screen.addEventListener("click", (e) => {
 
   // Only send click events if robot control is enabled
   if (elements.robotToggle?.checked || elements.premiumRobotToggle?.checked) {
-    socket.emit("mouse_click", { group: state.group, x, y });
+    socket.emit("mouse_click", { group: state.group, x, y, button: "left" });
+  }
+});
+
+// Add these mouse event listeners after the existing ones
+elements.screen.addEventListener("contextmenu", (e) => {
+  e.preventDefault(); // Prevent the default context menu
+  if (!socket.connected || !state.group) return;
+
+  const rect = elements.screen.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+
+  // Only send right click events if robot control is enabled
+  if (elements.robotToggle?.checked || elements.premiumRobotToggle?.checked) {
+    socket.emit("mouse_click", { group: state.group, x, y, button: "right" });
+  }
+});
+
+// Add keyboard event listener to the screen
+elements.screen.addEventListener("keydown", (e) => {
+  if (!socket.connected || !state.group) return;
+
+  // Only send keyboard events if robot control is enabled
+  if (elements.robotToggle?.checked || elements.premiumRobotToggle?.checked) {
+    socket.emit("key_press", {
+      group: state.group,
+      key: e.key,
+      shift: e.shiftKey,
+      ctrl: e.ctrlKey,
+      alt: e.altKey,
+      meta: e.metaKey,
+    });
   }
 });
 
@@ -479,6 +511,9 @@ function handleSuccessfulJoin(groupCode) {
     startTimer();
   }
 }
+
+// Make the screen focusable
+elements.screen.tabIndex = 0;
 
 // Initialize the UI
 initializeUI();
