@@ -18,7 +18,7 @@ const socket = io(endpoint, {
 
 const screenSize = robot.getScreenSize();
 const config = {
-  refreshRate: 2000, // Increased refresh rate
+  refreshRate: 600, // Increased refresh rate (60fps)
 };
 
 const group = Math.floor(100000 + Math.random() * 900000).toString();
@@ -163,13 +163,11 @@ function startScreensharing() {
     }
 
     try {
-      console.log(`${FgGreen}Capturing screenshot...${Reset}`);
       const img = await screenshot({ format: "jpeg", quality: 30 });
       const base64Image = img.toString("base64");
 
       // Add size logging
       const dataSizeKB = Math.round(base64Image.length / 1024);
-      console.log(`${FgGreen}Screenshot size: ${dataSizeKB}KB${Reset}`);
 
       socket.emit(
         "share",
