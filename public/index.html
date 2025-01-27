@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LANScreenShare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-900 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Hero Section -->
+      <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-gray-100 mb-4">LANScreenShare</h1>
+        <p class="text-xl text-gray-400 mb-8">
+          Secure, discreet, and lightning-fast screen sharing as a service
+        </p>
+        <div class="flex justify-center gap-4">
+          <a
+            href="/login"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
+          >
+            <i class="fas fa-sign-in-alt mr-2"></i>Login
+          </a>
+          <a
+            href="/signup"
+            class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
+          >
+            <i class="fas fa-user-plus mr-2"></i>Sign Up
+          </a>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="grid md:grid-cols-3 gap-8 mb-16">
+        <div
+          class="bg-gray-800 p-6 rounded-lg hover:bg-gray-750 transition duration-200"
+        >
+          <i class="fas fa-eye-slash text-4xl text-blue-400 mb-4"></i>
+          <h3 class="text-xl font-bold text-gray-100 mb-2">Undetectable</h3>
+          <p class="text-gray-400">
+            Runs silently in the background without any visible indicators or
+            system tray icons
+          </p>
+        </div>
+        <div
+          class="bg-gray-800 p-6 rounded-lg hover:bg-gray-750 transition duration-200"
+        >
+          <i class="fas fa-bolt text-4xl text-blue-400 mb-4"></i>
+          <h3 class="text-xl font-bold text-gray-100 mb-2">Lightning Fast</h3>
+          <p class="text-gray-400">
+            Optimized performance with sub-100ms latency on local networks and
+            compressed streaming
+          </p>
+        </div>
+        <div
+          class="bg-gray-800 p-6 rounded-lg hover:bg-gray-750 transition duration-200"
+        >
+          <i class="fas fa-mouse-pointer text-4xl text-blue-400 mb-4"></i>
+          <h3 class="text-xl font-bold text-gray-100 mb-2">Remote Control</h3>
+          <p class="text-gray-400">
+            Full mouse and keyboard control with real-time interaction and
+            multi-monitor support
+          </p>
+        </div>
+      </div>
+
+      <!-- Use Cases Section -->
+      <div class="bg-gray-800 rounded-lg p-8 mb-16">
+        <h2 class="text-3xl font-bold text-gray-100 mb-6">Perfect For</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="flex items-start">
+            <i class="fas fa-graduation-cap text-blue-400 mt-1 mr-4"></i>
+            <div>
+              <h4 class="text-lg font-bold text-gray-100 mb-2">Students</h4>
+              <p class="text-gray-400">
+                Get real-time assistance during remote exams and assessments
+                with undetectable screen sharing
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <i class="fas fa-users text-blue-400 mt-1 mr-4"></i>
+            <div>
+              <h4 class="text-lg font-bold text-gray-100 mb-2">Study Groups</h4>
+              <p class="text-gray-400">
+                Collaborate seamlessly with peer-to-peer screen sharing during
+                group study sessions
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <i class="fas fa-laptop-code text-blue-400 mt-1 mr-4"></i>
+            <div>
+              <h4 class="text-lg font-bold text-gray-100 mb-2">Developers</h4>
+              <p class="text-gray-400">
+                Share code and debug together with minimal overhead and maximum
+                performance
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <i class="fas fa-shield-alt text-blue-400 mt-1 mr-4"></i>
+            <div>
+              <h4 class="text-lg font-bold text-gray-100 mb-2">
+                Privacy Focused
+              </h4>
+              <p class="text-gray-400">
+                End-to-end encrypted connections with no data stored on external
+                servers
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Features -->
+      <div class="bg-gray-800 rounded-lg p-8 mb-16">
+        <h2 class="text-3xl font-bold text-gray-100 mb-6">
+          Technical Features
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <i class="fas fa-tachometer-alt text-3xl text-blue-400 mb-4"></i>
+            <h4 class="text-lg font-bold text-gray-100 mb-2">
+              High Performance
+            </h4>
+            <p class="text-gray-400">60 FPS streaming with adaptive quality</p>
+          </div>
+          <div class="text-center">
+            <i class="fas fa-network-wired text-3xl text-blue-400 mb-4"></i>
+            <h4 class="text-lg font-bold text-gray-100 mb-2">LAN Optimized</h4>
+            <p class="text-gray-400">Designed for local network efficiency</p>
+          </div>
+          <div class="text-center">
+            <i class="fas fa-memory text-3xl text-blue-400 mb-4"></i>
+            <h4 class="text-lg font-bold text-gray-100 mb-2">
+              Low Resource Usage
+            </h4>
+            <p class="text-gray-400">Minimal CPU and memory footprint</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="text-center text-gray-400">
+        <p class="mb-2">Use responsibly. We are not liable for any misuse.</p>
+        <p class="text-sm">© 2024 LANScreenShare. All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>

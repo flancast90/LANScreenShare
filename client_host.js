@@ -21,7 +21,7 @@ const config = {
   refreshRate: 2000, // Increased refresh rate
 };
 
-const group = Math.random().toString(36).substring(7);
+const group = Math.floor(100000 + Math.random() * 900000).toString();
 let screenshotInterval = null;
 
 // Terminal colors for pretty output
@@ -86,7 +86,6 @@ socket.on("mouse_move", (data) => {
 
     // Move the mouse
     robot.moveMouse(x, y);
-    console.log(`${FgGreen}Mouse moved to: (${x}, ${y})${Reset}`);
   } catch (error) {
     console.log(`${FgRed}Error moving mouse: ${error}${Reset}`);
   }
@@ -101,7 +100,6 @@ socket.on("mouse_click", (data) => {
     // Move mouse and perform click
     robot.moveMouse(x, y);
     robot.mouseClick();
-    console.log(`${FgGreen}Mouse clicked at: (${x}, ${y})${Reset}`);
   } catch (error) {
     console.log(`${FgRed}Error clicking mouse: ${error}${Reset}`);
   }
@@ -132,8 +130,6 @@ function startScreensharing() {
         group: group,
         image: base64Image,
       });
-
-      console.log(`${FgGreen}Screenshot sent via WebSocket${Reset}`);
     } catch (err) {
       console.log(`${FgRed}Error capturing screenshot: ${err}${Reset}`);
     }
