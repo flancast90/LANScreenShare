@@ -1,13 +1,13 @@
 const express = require("express");
-require("dotenv").config();
-const port = process.env.PORT || 8000;
+const env = require("./env.json");
+const port = env.PORT || 8000;
 const app = express();
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(env.STRIPE_SECRET_KEY);
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -22,7 +22,7 @@ const io = new Server(server, {
 const path = require("path");
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -85,7 +85,7 @@ app.use(
 
 // Create the session middleware first so we can share it
 const sessionMiddleware = session({
-  secret: process.env.SESSION_SECRET,
+  secret: env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -141,7 +141,7 @@ app.post("/create-subscription", ensureAuthenticated, async (req, res) => {
     // Create subscription
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
-      items: [{ price: process.env.STRIPE_PRICE_ID }],
+      items: [{ price: env.STRIPE_PRICE_ID }],
       expand: ["latest_invoice.payment_intent"],
     });
 
@@ -171,7 +171,7 @@ app.post(
       event = stripe.webhooks.constructEvent(
         req.body,
         sig,
-        process.env.STRIPE_WEBHOOK_SECRET
+        env.STRIPE_WEBHOOK_SECRET
       );
     } catch (err) {
       return res.status(400).send(`Webhook Error: ${err.message}`);
