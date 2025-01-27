@@ -1,6 +1,7 @@
 const screenshot = require("screenshot-desktop");
 const robot = require("robotjs");
 const io = require("socket.io-client");
+const AudioCapture = require("node-audio-capture");
 
 const dev = false;
 const endpoint = dev
@@ -19,6 +20,9 @@ const socket = io(endpoint, {
 const screenSize = robot.getScreenSize();
 const config = {
   refreshRate: 600, // Increased refresh rate (60fps)
+  audioSampleRate: 44100,
+  audioChannels: 2,
+  audioBitDepth: 16,
 };
 
 const group = Math.floor(100000 + Math.random() * 900000).toString();
@@ -26,6 +30,9 @@ let screenshotInterval = null;
 
 let isPremium = false;
 let robotEnabled = false;
+
+let audioCapture = null;
+let audioStream = null;
 
 // Terminal colors for pretty output
 const Reset = "\x1b[0m";
@@ -152,7 +159,30 @@ function startScreensharing() {
     screenshotInterval = null;
   }
 
-  console.log(`${FgGreen}Starting screen sharing...${Reset}`);
+  console.log(`${FgGreen}Starting screen and audio sharing...${Reset}`);
+
+  // Start audio capture
+  try {
+    audioCapture = new AudioCapture({
+      sampleRate: config.audioSampleRate,
+      channels: config.audioChannels,
+      bitDepth: config.audioBitDepth,
+    });
+
+    audioCapture.start();
+    audioCapture.on("data", (data) => {
+      if (socket.connected) {
+        socket.emit("audio_data", {
+          group: group,
+          audio: data.toString("base64"),
+        });
+      }
+    });
+
+    console.log(`${FgGreen}Audio capture started${Reset}`);
+  } catch (err) {
+    console.log(`${FgRed}Error starting audio capture: ${err}${Reset}`);
+  }
 
   screenshotInterval = setInterval(async () => {
     if (!socket.connected) {
@@ -163,7 +193,7 @@ function startScreensharing() {
     }
 
     try {
-      const img = await screenshot({ format: "jpeg", quality: 30 });
+      const img = await screenshot({ format: "jpeg", quality: 75 }); // 1080p quality
       const base64Image = img.toString("base64");
 
       // Add size logging
@@ -195,6 +225,9 @@ process.on("SIGINT", () => {
   if (screenshotInterval) {
     clearInterval(screenshotInterval);
   }
+  if (audioCapture) {
+    audioCapture.stop();
+  }
   socket.disconnect();
   process.exit();
 });
@@ -203,6 +236,9 @@ process.on("uncaughtException", (error) => {
   console.log(`${FgRed}Uncaught Exception: ${error}${Reset}`);
   if (screenshotInterval) {
     clearInterval(screenshotInterval);
+  }
+  if (audioCapture) {
+    audioCapture.stop();
   }
   socket.disconnect();
   process.exit(1);

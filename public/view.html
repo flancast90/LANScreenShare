@@ -24,6 +24,73 @@
         border: 1px solid #ccc;
       }
     </style>
+    <script>
+      // Add this function to initialize audio context and handle audio playback
+      let audioContext;
+      let audioQueue = [];
+      let isPlayingAudio = false;
+
+      function initAudioContext() {
+        // Create audio context on user interaction to comply with browser policies
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Set up a gain node for volume control
+        const gainNode = audioContext.createGain();
+        gainNode.connect(audioContext.destination);
+        gainNode.gain.value = 0.8; // Set initial volume to 80%
+      }
+
+      function playAudioData(base64Data) {
+        if (!audioContext) return;
+
+        // Convert base64 to array buffer
+        const binaryString = window.atob(base64Data);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        // Add to queue
+        audioQueue.push(bytes.buffer);
+
+        // Start playing if not already playing
+        if (!isPlayingAudio) {
+          playNextInQueue();
+        }
+      }
+
+      async function playNextInQueue() {
+        if (audioQueue.length === 0) {
+          isPlayingAudio = false;
+          return;
+        }
+
+        isPlayingAudio = true;
+        const audioBuffer = audioQueue.shift();
+
+        try {
+          // Decode the audio data
+          const decodedData = await audioContext.decodeAudioData(audioBuffer);
+
+          // Create buffer source
+          const source = audioContext.createBufferSource();
+          source.buffer = decodedData;
+          source.connect(audioContext.destination);
+
+          // Play the audio
+          source.start(0);
+
+          // When finished, play next in queue
+          source.onended = () => {
+            playNextInQueue();
+          };
+        } catch (error) {
+          console.error("Error playing audio:", error);
+          playNextInQueue();
+        }
+      }
+    </script>
   </head>
   <body class="bg-gray-900 min-h-screen">
     <!-- Group Code Modal -->
@@ -229,6 +296,17 @@
               <i class="fas fa-users mr-2"></i>
               Change Group
             </button>
+            <!-- Add audio controls -->
+            <div class="flex items-center space-x-2">
+              <button
+                id="audio-toggle"
+                class="bg-indigo-700 hover:bg-indigo-800 text-white px-4 py-2 rounded-lg flex items-center"
+                onclick="toggleAudio()"
+              >
+                <i class="fas fa-volume-up mr-2"></i>
+                <span id="audio-status">Audio: Off</span>
+              </button>
+            </div>
           </div>
         </div>
         <div id="connection-status" class="text-xl text-gray-300 font-semibold">
@@ -263,5 +341,33 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/client.js"></script>
+    <script>
+      // Add to your existing socket connection code
+      let audioEnabled = false;
+
+      function toggleAudio() {
+        audioEnabled = !audioEnabled;
+        const audioStatus = document.getElementById("audio-status");
+        const audioToggle = document.getElementById("audio-toggle");
+
+        if (audioEnabled) {
+          if (!audioContext) {
+            initAudioContext();
+          }
+          audioStatus.textContent = "Audio: On";
+          audioToggle.querySelector("i").className = "fas fa-volume-up mr-2";
+        } else {
+          audioStatus.textContent = "Audio: Off";
+          audioToggle.querySelector("i").className = "fas fa-volume-mute mr-2";
+        }
+      }
+
+      // Add this to your socket event listeners
+      socket.on("audio_data", (data) => {
+        if (audioEnabled && data.group === currentGroup) {
+          playAudioData(data.audio);
+        }
+      });
+    </script>
   </body>
 </html>

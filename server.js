@@ -321,6 +321,15 @@ io.on("connection", (socket) => {
   // Check premium status on connection
   checkAndEmitPremiumStatus();
 
+  // Add new handler for audio data
+  socket.on("audio_data", (data) => {
+    // Forward audio data only to other clients in the same group
+    socket.to(data.group).emit("audio_data", {
+      group: data.group,
+      audio: data.audio,
+    });
+  });
+
   socket.on("subscribe", (group, callback) => {
     try {
       console.log(`Client ${socket.id} subscribing to group ${group}`);
@@ -514,8 +523,10 @@ process.on("SIGINT", shutdown);
 function shutdown() {
   console.log("Gracefully shutting down...");
 
+  // Notify all clients about shutdown
   io.emit("server_shutdown");
 
+  // Close all connections
   io.close(() => {
     console.log("All connections closed");
     server.close(() => {
