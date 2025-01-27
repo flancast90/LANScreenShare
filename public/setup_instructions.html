@@ -93,6 +93,22 @@ node client_host.js</pre
                 </h3>
                 <ol class="list-decimal list-inside space-y-3">
                   <li>
+                    Download Python 3.11:
+                    <ol class="list-[lower-alpha] ml-6 mt-2 space-y-2">
+                      <li>
+                        Visit
+                        <a
+                          href="https://www.python.org/downloads/release/python-3115/"
+                          target="_blank"
+                          class="text-indigo-400 hover:text-indigo-300"
+                          >Python Downloads</a
+                        >
+                      </li>
+                      <li>Download "Windows installer (64-bit)"</li>
+                      <li>Run installer and check "Add Python 3.11 to PATH"</li>
+                    </ol>
+                  </li>
+                  <li>
                     Open PowerShell as Administrator (right-click, "Run as
                     administrator")
                   </li>
@@ -111,7 +127,12 @@ npm install --global --production windows-build-tools</pre
                   <i class="fab fa-apple mr-2"></i>Mac
                 </h3>
                 <ol class="list-decimal list-inside space-y-3">
-                  <li>Open Terminal</li>
+                  <li>
+                    Install Python 3.11:
+                    <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
+brew install python@3.11</pre
+                    >
+                  </li>
                   <li>
                     Install Xcode Command Line Tools:
                     <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
@@ -128,10 +149,11 @@ xcode-select --install</pre
                 </h3>
                 <ol class="list-decimal list-inside space-y-3">
                   <li>
-                    Install Python 2.7 and other dependencies:
+                    Install Python 3.11 and other dependencies:
                     <pre class="bg-gray-900 p-3 rounded-lg mt-2 text-sm">
 sudo apt-get update
-sudo apt-get install python2.7 make gcc g++ libxtst-dev libpng++-dev</pre
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get install python3.11 make gcc g++ libxtst-dev libpng++-dev</pre
                     >
                   </li>
                   <li>
